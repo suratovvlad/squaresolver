@@ -18,3 +18,5 @@ lib
 include
 .vs
 
+cmake-build-debug
+.idea

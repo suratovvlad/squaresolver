@@ -8,6 +8,7 @@ project(commonlibs C CXX)
 set(SOURCE_FILES
     solver.hpp
     solver.cpp
+    monitor.hpp
 )
 
 add_library(commonlibs SHARED STATIC ${SOURCE_FILES})
