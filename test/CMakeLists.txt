@@ -1,7 +1,7 @@
 # CMakeList.txt : CMake project for square_solver, include source and define
 # project specific logic here.
 #
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required(VERSION 3.8)
 
 project(solver_tests)
 
@@ -10,7 +10,9 @@ find_package(Catch2 CONFIG REQUIRED)
 include_directories(${COMMONLIBS_HEADERS_DIR})
 
 
-set(SOURCE_FILES testmain.cpp)
+set(SOURCE_FILES
+        testmain.cpp
+        )
 
 add_executable(solver_tests ${SOURCE_FILES})
 target_link_libraries(solver_tests commonlibs Catch2::Catch2)

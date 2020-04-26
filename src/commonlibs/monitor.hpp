@@ -9,7 +9,9 @@
 #include <random>
 #include <chrono>
 
-#include "solver.hpp"
+#include "quadricequation.hpp"
+#include "blockingqueue.hpp"
+#include "workerbase.hpp"
 
 //class BoundedBuffer
 //{
@@ -49,199 +51,38 @@
 //
 //};
 
-template<class Task>
-class BlockingQueue {
-    std::queue<Task> queue_;
-    std::mutex queueLock_;
-    std::condition_variable queueEmpty_;
-    std::condition_variable queueFull_;
-
-    using CapacityType = typename std::queue<Task>::size_type;
-    const CapacityType maxSize_ = 10;
-
-    bool empty() const {
-        return queue_.empty();
-    }
-
-    bool full() const {
-        return queue_.size() >= maxSize_;
-    }
-
-public:
-    BlockingQueue(const CapacityType& capacity)
-        : maxSize_(capacity)
-    {
-
-    }
-
-    ~BlockingQueue() = default; // TODO: unlock mutex needed?
-    BlockingQueue(const BlockingQueue&) = delete;
-    BlockingQueue(BlockingQueue&&) = delete;
-    BlockingQueue& operator=(const BlockingQueue&) = delete;
-    BlockingQueue& operator=(BlockingQueue&&) = delete;
-
-    // TODO: think about &&
-    void schedule(Task& task) {
-        // Acquire lock for initial predicate check.
-        std::unique_lock<std::mutex> lock(queueLock_);
-
-        while (full()) // Check if the queue is non-full.
-        {
-            // Wait until queue becomes non-full
-            queueFull_.wait(lock, [this]() {
-                return !full();
-            });
-        }
-
-        // Critical section that requires the queue to be non-full.
-        queue_.push(std::move(task)); // Add the task to the queue.
-
-        // Notify one or all that queue is non-empty
-        queueEmpty_.notify_all(); //queueEmpty_.notify_one();
-
-        // End of critical sections related to the queue.
-    }
-
-    void consume(Task& task) {
-        // Acquire lock for initial predicate check.
-        std::unique_lock<std::mutex> lock(queueLock_);
-
-        while (empty()) // Check if the queue is non-empty.
-        {
-            // Wait until queue becomes non-empty
-            queueEmpty_.wait(lock, [this] {
-                return !empty();
-            });
-        }
-
-        // Critical section that requires the queue to be non-empty
-
-        // Take a task off of the queue.
-        task = std::move(queue_.front());
-        queue_.pop();
-
-        // Notify one or all that queue is non-full
-        queueFull_.notify_all(); //queueFull_.notify_one();
-
-//        return task;
-    }
-};
-
-template<class TasksQueuePtr>
-class WorkerBase {
-
-protected:
-//    using Task = QuadricEquation;
-//    using TaskPtr = std::unique_ptr<Task>;
-//    using TasksQueue = BlockingQueue<TaskPtr>;
-//    using TasksQueuePtr = std::shared_ptr<TasksQueue>;
-
-    TasksQueuePtr tasksQueue_;
-
-public:
-    explicit WorkerBase(TasksQueuePtr tasksQueue)
-    : tasksQueue_{tasksQueue}
-    {
-
-    }
-
-    virtual ~WorkerBase() = default;
-
-    virtual void run() = 0;
-};
 
 
-class SimpleTaskGenerator : public WorkerBase<std::shared_ptr<BlockingQueue<int>>> {
-
-//    using Task = int;
-//    using TaskPtr = std::unique_ptr<Task>;
-//    using TasksQueue = BlockingQueue<TaskPtr>;
-//    using TasksQueuePtr = std::shared_ptr<TasksQueue>;
-    int POISON_PILL = 1000;
-
-public:
-    explicit SimpleTaskGenerator(std::shared_ptr<BlockingQueue<int>> tasksQueue)
-        : WorkerBase{tasksQueue}
-    {
-
-    }
-    void run() override
-    {
-        std::cout << "Start scheduling ... " << std::endl;
-        for (int i = 0; i < 500; ++i)
-        {
-            std::cout << "Scheduling i = " << i << std::endl;
-            tasksQueue_->schedule(i);
-        }
-
-        std::cout << "Scheduling POISON_PILL " << POISON_PILL << std::endl;
-
-        tasksQueue_->schedule(POISON_PILL);
-
-
-        std::cout << "... End scheduling" << std::endl;
-    }
-};
-
-class SimpleTaskConsumer : public WorkerBase<std::shared_ptr<BlockingQueue<int>>>
+class QuadricEquationWorker : public WorkerBase<std::shared_ptr<BlockingQueue<std::unique_ptr<QuadricEquation>>>>
 {
-//    std::shared_ptr<BlockingQueue<int>> tasksQueue_;
-    int POISON_PILL = 1000;
+protected:
+    struct PoisonPill : public QuadricEquation
+    {};
 
-public:
-    explicit SimpleTaskConsumer(std::shared_ptr<BlockingQueue<int>> tasksQueue)
-    : WorkerBase{tasksQueue}
-    {
-
-    }
-    void run() override
-    {
-        std::cout << "Start consuming ... " << std::endl;
-        for (;;)
-        {
-            int task = 0;
-            tasksQueue_->consume(task);
-
-            if (task == POISON_PILL) {
-                std::cout << "POISON_PILL found" << POISON_PILL << std::endl;
-                // return poison pill back to queue,
-                // because in general case number of consumers could not be known
-                tasksQueue_->schedule(POISON_PILL);
-                break;
-            }
-
-            std::cout << "Start task : " << task << std::endl;
-
-            std::mt19937_64 eng{std::random_device{}()};  // or seed however you want
-            std::uniform_int_distribution<> dist{10, 100};
-            auto time = std::chrono::milliseconds{dist(eng)};
-            std::this_thread::sleep_for(time);
-
-            std::cout << "End task : " << task
-                << " after time : " << std::to_string(time.count()) << std::endl;
-
-        }
-        std::cout << "... End consuming" << std::endl;
-    }
-};
-
-class Producer {
     using Task = QuadricEquation;
     using TaskPtr = std::unique_ptr<Task>;
     using TasksQueue = BlockingQueue<TaskPtr>;
     using TasksQueuePtr = std::shared_ptr<TasksQueue>;
 
-    TasksQueuePtr tasksQueue_;
+public:
+    template<typename... Args>
+    explicit QuadricEquationWorker(Args &&... args)
+            : WorkerBase{std::forward<Args>(args)...} {}
+
+};
+
+class Producer : QuadricEquationWorker {
+
+
 public:
 
-    explicit Producer(TasksQueuePtr tasksQueue)
-            : tasksQueue_{tasksQueue}
-    {
+    template<typename... Args>
+    explicit Producer(Args &&... args)
+            : QuadricEquationWorker{std::forward<Args>(args)...} {}
 
-    }
-
-    void run()
+    void run() override
     {
+        std::cout << "Start producing ... " << std::endl;
         int input = 0;
         int count = 0;
         int skippedCount = 0;
@@ -276,6 +117,7 @@ public:
                     ++count;
                 }
                 else {
+                    std::cout << "Schedule" << std::endl;
                     tasksQueue_->schedule(parameters);
                     count = 0;
                     parameters = std::make_unique<Task>();
@@ -283,9 +125,53 @@ public:
                 std::cout << input << std::endl;
             }
         }
+
+        if (count != 0)
+        {
+            std::cout << "Not all parameters entered, guess other parameters as 0" << std::endl;
+            tasksQueue_->schedule(parameters);
+        }
+
+        std::cout << "Insert poison pill" << std::endl;
+        TaskPtr poisonPill = std::make_unique<PoisonPill>();
+        tasksQueue_->schedule(poisonPill);
+
+        std::cout << "End producing ... " << std::endl;
     }
 };
 
-class Consumer {
+class Consumer : QuadricEquationWorker {
+public:
 
+    template<typename... Args>
+    explicit Consumer(Args &&... args)
+            : QuadricEquationWorker{std::forward<Args>(args)...} {}
+
+    void run() override
+    {
+        std::cout << "Start consuming ... " << std::endl;
+        for (;;) {
+            auto task = std::shared_ptr<Task>{}; // for using dynamic_pointer_cast
+
+            {
+                auto task_unique = TaskPtr{};
+                tasksQueue_->consume(task_unique);
+
+                // transfer ownership to shared_ptr
+                task = std::move(task_unique);
+            }
+
+            if (std::dynamic_pointer_cast<PoisonPill>(task))
+            {
+                std::cout << "Poison pill found, insert one more for other consumers" << std::endl;
+                // I decided not create a new poison pill to not transferring ownership back from shared_pointer.
+                TaskPtr poisonPill = std::make_unique<PoisonPill>();
+                tasksQueue_->schedule(poisonPill);
+                break;
+            }
+
+            std::cout << "(" << task->a_ << "," << task->b_ << "," << task->c_ << ")=>" << std::endl;
+        }
+        std::cout << "End consuming ... " << std::endl;
+    }
 };

@@ -9,9 +9,19 @@ set(SOURCE_FILES
     solver.hpp
     solver.cpp
     monitor.hpp
-)
+    simpletaskworker.hpp
+    simpletaskgenerator.hpp
+    simpletaskgenerator.cpp
+    simpletaskconsumer.hpp
+    simpletaskconsumer.cpp
+    quadricequation.hpp
+    quadricequation.cpp
+    blockingqueue.cpp
+    blockingqueue.hpp
+    workerbase.cpp
+    workerbase.hpp)
 
 add_library(commonlibs SHARED STATIC ${SOURCE_FILES})
 
 install(TARGETS commonlibs DESTINATION ${SOLVER_INSTALL_LIB_DIR})
-install(FILES solver.hpp DESTINATION ${SOLVER_INSTALL_INCLUDE_DIR})
+install(FILES monitor.hpp solver.hpp DESTINATION ${SOLVER_INSTALL_INCLUDE_DIR})

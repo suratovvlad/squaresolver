@@ -1,10 +1,13 @@
 
 #include <iostream>
 #include <limits>
-#include <monitor.hpp>
+#include "simpletaskgenerator.hpp"
+#include "simpletaskconsumer.hpp"
 #include <thread>
 #include <chrono>
 #include <sstream>
+
+#include "monitor.hpp"
 
 int main()
 {
@@ -32,31 +35,33 @@ int main()
 //	}
 //	std::cout << "\nEntered : " << count << "\nSkipped  : " << skippedCount;
 
-//    using Task = QuadricEquation;
-//    using TaskPtr = std::unique_ptr<Task>;
-//    using TasksQueue = BlockingQueue<TaskPtr>;
-//    using TasksQueuePtr = std::shared_ptr<TasksQueue>;
-//
-//    auto tasksQueue = std::make_shared<TasksQueue>(10);
 
     constexpr size_t capacity = 10;
-    auto tasksQueue = std::make_shared<BlockingQueue<int>>(capacity);
+
+    using Task = QuadricEquation;
+    using TaskPtr = std::unique_ptr<Task>;
+    using TasksQueue = BlockingQueue<TaskPtr>;
+    using TasksQueuePtr = std::shared_ptr<TasksQueue>;
+
+    auto tasksQueue = std::make_shared<TasksQueue>(capacity);
+
+//    auto tasksQueue = std::make_shared<BlockingQueue<int>>(capacity);
 
 
     std::cout << "starting producer thread..." << std::endl;
-    std::thread producerThread(&SimpleTaskGenerator::run, SimpleTaskGenerator{tasksQueue});
+    std::thread producerThread(&Producer::run, Producer{tasksQueue});
 
     std::cout << "starting consumer thread..." << std::endl;
-    std::thread consumerThread(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
+    std::thread consumerThread(&Consumer::run, Consumer{tasksQueue});
 
-    std::cout << "starting consumer thread 2..." << std::endl;
-    std::thread consumerThread2(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
-
-    std::cout << "starting consumer thread 3..." << std::endl;
-    std::thread consumerThread3(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
-
-    std::cout << "starting consumer thread 3..." << std::endl;
-    std::thread consumerThread4(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
+//    std::cout << "starting consumer thread 2..." << std::endl;
+//    std::thread consumerThread2(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
+//
+//    std::cout << "starting consumer thread 3..." << std::endl;
+//    std::thread consumerThread3(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
+//
+//    std::cout << "starting consumer thread 3..." << std::endl;
+//    std::thread consumerThread4(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
 
     std::chrono::time_point<std::chrono::system_clock> start, end;
 
@@ -67,10 +72,9 @@ int main()
 
     producerThread.join();
     consumerThread.join();
-    consumerThread2.join();
-    consumerThread3.join();
-    consumerThread4.join();
-
+//    consumerThread2.join();
+//    consumerThread3.join();
+//    consumerThread4.join();
 
     end = std::chrono::system_clock::now();
 

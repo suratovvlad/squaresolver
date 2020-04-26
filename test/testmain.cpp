@@ -6,6 +6,8 @@
 #include <solver.hpp>
 
 #include <monitor.hpp>
+#include <simpletaskgenerator.hpp>
+#include <simpletaskconsumer.hpp>
 
 TEST_CASE("simple equation, D > 0")
 {
@@ -71,53 +73,96 @@ TEST_CASE("Blocked Queue with simple task")
     }
 }
 
-TEST_CASE("Blocked Queue with QuadricEquation")
+//TEST_CASE("Blocked Queue with QuadricEquation")
+//{
+//    const size_t capacity = 10;
+//    auto blockedQueue = std::make_unique<BlockingQueue<std::unique_ptr<QuadricEquation>>>(capacity);
+//
+//    for (size_t i = 1; i <= capacity; ++i)
+//    {
+//        auto task = std::make_unique<QuadricEquation>();
+//        task->a_ = i;
+//        task->b_ = 2 * i;
+//        task->c_ = 4 * i;
+//        blockedQueue->schedule(task);
+//    }
+//
+//    for (size_t i = 1; i <= capacity; ++i)
+//    {
+//        std::unique_ptr<QuadricEquation> task;
+//        blockedQueue->consume(task);
+//        REQUIRE(task);
+//        REQUIRE(task->a_ == i);
+//        REQUIRE(task->b_ == 2 * i);
+//        REQUIRE(task->c_ == 4 * i);
+//    }
+//}
+//
+//TEST_CASE("Blocked Queue with QuadricEquation 2")
+//{
+//    const size_t capacity = 10;
+//    auto blockedQueue = std::make_unique<BlockingQueue<QuadricEquation>>(capacity);
+//
+//    for (size_t i = 1; i <= capacity; ++i)
+//    {
+//        auto task = QuadricEquation{};
+//        task.a_ = i;
+//        task.b_ = 2 * i;
+//        task.c_ = 4 * i;
+//        blockedQueue->schedule(task);
+//    }
+//
+//    for (size_t i = 1; i <= capacity; ++i)
+//    {
+//        auto task = QuadricEquation{};
+//        blockedQueue->consume(task);
+//        REQUIRE(task.a_ == i);
+//        REQUIRE(task.b_ == 2 * i);
+//        REQUIRE(task.c_ == 4 * i);
+//    }
+//}
+
+TEST_CASE("SimpleTaskWorkers")
 {
-    const size_t capacity = 10;
-    auto blockedQueue = std::make_unique<BlockingQueue<std::unique_ptr<QuadricEquation>>>(capacity);
+    constexpr size_t capacity = 10;
+    auto tasksQueue = std::make_shared<BlockingQueue<int>>(capacity);
 
-    for (size_t i = 1; i <= capacity; ++i)
-    {
-        auto task = std::make_unique<QuadricEquation>();
-        task->a_ = i;
-        task->b_ = 2 * i;
-        task->c_ = 4 * i;
-        blockedQueue->schedule(task);
-    }
 
-    for (size_t i = 1; i <= capacity; ++i)
-    {
-        std::unique_ptr<QuadricEquation> task;
-        blockedQueue->consume(task);
-        REQUIRE(task);
-        REQUIRE(task->a_ == i);
-        REQUIRE(task->b_ == 2 * i);
-        REQUIRE(task->c_ == 4 * i);
-    }
-}
+    std::cout << "starting producer thread..." << std::endl;
+    std::thread producerThread(&SimpleTaskGenerator::run, SimpleTaskGenerator{tasksQueue});
 
-TEST_CASE("Blocked Queue with QuadricEquation 2")
-{
-    const size_t capacity = 10;
-    auto blockedQueue = std::make_unique<BlockingQueue<QuadricEquation>>(capacity);
+    std::cout << "starting consumer thread..." << std::endl;
+    std::thread consumerThread(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
 
-    for (size_t i = 1; i <= capacity; ++i)
-    {
-        auto task = QuadricEquation{};
-        task.a_ = i;
-        task.b_ = 2 * i;
-        task.c_ = 4 * i;
-        blockedQueue->schedule(task);
-    }
+    std::cout << "starting consumer thread 2..." << std::endl;
+    std::thread consumerThread2(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
 
-    for (size_t i = 1; i <= capacity; ++i)
-    {
-        auto task = QuadricEquation{};
-        blockedQueue->consume(task);
-        REQUIRE(task.a_ == i);
-        REQUIRE(task.b_ == 2 * i);
-        REQUIRE(task.c_ == 4 * i);
-    }
+    std::cout << "starting consumer thread 3..." << std::endl;
+    std::thread consumerThread3(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
+
+    std::cout << "starting consumer thread 3..." << std::endl;
+    std::thread consumerThread4(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
+
+    std::chrono::time_point<std::chrono::system_clock> start, end;
+
+
+    std::cout << "waiting for threads to finish..." << std::endl;
+
+    start = std::chrono::system_clock::now();
+
+    producerThread.join();
+    consumerThread.join();
+    consumerThread2.join();
+    consumerThread3.join();
+    consumerThread4.join();
+
+    end = std::chrono::system_clock::now();
+
+    std::chrono::duration<double> elapsed_seconds = end - start;
+    auto x = std::chrono::duration_cast<std::chrono::seconds>(elapsed_seconds);
+
+    //to_string
+    std::cout <<"Spent time (s): " << std::to_string(x.count()) << std::endl;
 }
 
 //using namespace std;
