@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include "solver.hpp"
+#include "quadricequation.hpp"
 
 void Consumer::run()
 {

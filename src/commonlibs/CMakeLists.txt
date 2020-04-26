@@ -8,12 +8,12 @@ project(commonlibs C CXX)
 set(SOURCE_FILES
     quadricequation.hpp
     quadricequation.cpp
+    solver.hpp
+    solver.cpp
     blockingqueue.cpp
     blockingqueue.hpp
     workerbase.cpp
     workerbase.hpp
-    solver.hpp
-    solver.cpp
     producercin.hpp
     producercin.cpp
     consumer.hpp 

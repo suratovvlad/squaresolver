@@ -5,10 +5,10 @@
 #include <catch2/catch.hpp>
 #include <thread>
 
-#include <quadricequation.hpp>
 #include "simpletaskgenerator.hpp"
 #include "simpletaskconsumer.hpp"
 #include <solver.hpp>
+#include <quadricequation.hpp>
 
 TEST_CASE("simple equation, D > 0")
 {
