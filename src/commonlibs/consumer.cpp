@@ -7,7 +7,7 @@
 
 void Consumer::run()
 {
-    std::cout << "Start consuming ... " << std::endl;
+    //std::cout << "Start consuming ... " << std::endl;
     for (;;) {
         auto task = std::shared_ptr<Task>{}; // for using dynamic_pointer_cast
 
@@ -21,7 +21,7 @@ void Consumer::run()
 
         if (std::dynamic_pointer_cast<PoisonPill>(task))
         {
-            std::cout << "Poison pill found, insert one more for other consumers" << std::endl;
+            //std::cout << "Poison pill found, insert one more for other consumers" << std::endl;
             // I decided not create a new poison pill to not transferring ownership back from shared_pointer.
             TaskPtr poisonPill = std::make_unique<PoisonPill>();
             tasksQueue_->schedule(poisonPill);
@@ -42,5 +42,5 @@ void Consumer::run()
         }
 
     }
-    std::cout << "End consuming ... " << std::endl;
+    //std::cout << "End consuming ... " << std::endl;
 }

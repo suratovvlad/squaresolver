@@ -1,54 +1,36 @@
-
 #pragma once
 
-#include <iostream>
+#include <cstdint>
 
-class QuadricEquation {
+class QuadricEquation
+{
+
 public:
     std::int64_t a_ = 0;
     std::int64_t b_ = 0;
     std::int64_t c_ = 0;
 
-    QuadricEquation() //= default;
-    {
-        std::cout << "QuadricEquation()" << std::endl;
-    }
+    // Virtual destructor is needed because there is a derived class used as Poison Pill
+    virtual ~QuadricEquation() = default;
 
-    QuadricEquation(const QuadricEquation &params) //= default;
-            : a_{params.a_}, b_{params.b_}, c_{params.c_} {
-        std::cout << "QuadricEquation(const QuadricEquation&)" << std::endl;
-    }
+    // Rule of five in action
+    QuadricEquation(const QuadricEquation& params) = default;
+    QuadricEquation(QuadricEquation&& params) = default;
+    QuadricEquation& operator=(const QuadricEquation& params) = default;
+    QuadricEquation& operator=(QuadricEquation&& params) = default;
 
-    QuadricEquation(QuadricEquation &&params) //= default;
-            : a_{std::move(params.a_)}, b_{std::move(params.b_)}, c_{std::move(params.c_)} {
-        std::cout << "QuadricEquation(QuadricEquation&&)" << std::endl;
-    }
-
-    virtual ~QuadricEquation() // = default;
-    {
-        std::cout << "~QuadricEquation()" << std::endl;
-    }
-
-    QuadricEquation &operator=(const QuadricEquation &params) //= default;
-    {
-        a_ = params.a_;
-        b_ = params.b_;
-        c_ = params.c_;
-        std::cout << "operator=(const QuadricEquation&)" << std::endl;
-        return *this;
-    }
-
-    QuadricEquation &operator=(QuadricEquation &&params) //= default;
-    {
-        a_ = std::move(params.a_);
-        b_ = std::move(params.b_);
-        c_ = std::move(params.c_);
-        std::cout << "operator=(QuadricEquation&&)" << std::endl;
-        return *this;
-    }
+    // Declare also default constructor for symmetry
+    QuadricEquation() = default;
 };
 
-struct Roots
+enum class Parameter
+{
+    A = 1,
+    B = 2,
+    C = 3
+};
+
+struct Roots final
 {
     double x1_ = 0;
     double x2_ = 0;

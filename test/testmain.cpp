@@ -169,10 +169,3 @@ TEST_CASE("SimpleTaskWorkers")
     //to_string
     std::cout <<"Spent time (s): " << std::to_string(x.count()) << std::endl;
 }
-
-//using namespace std;
-//int main()
-//{
-//	cout << "Hello CMake Test." << endl;
-//	return 0;
-//}

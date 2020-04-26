@@ -2,8 +2,8 @@
 #include <iostream>
 #include <limits>
 #include <thread>
-#include <chrono>
-#include <sstream>
+//#include <chrono>
+//#include <sstream>
 
 #include "producer.hpp"
 #include "consumer.hpp"
@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     auto tasksQueue = std::make_shared<TasksQueue>(capacity);
 
     const auto n = std::thread::hardware_concurrency();
-    std::cout << n << " concurrent threads are supported.\n";
+    //std::cout << n << " concurrent threads are supported.\n";
 
     auto threads = std::vector<std::thread>{};
 
@@ -43,24 +43,19 @@ int main(int argc, char* argv[])
         }
     }
 
-    std::chrono::time_point<std::chrono::system_clock> start, end;
-
-    std::cout << "waiting for threads to finish..." << std::endl;
-
-    start = std::chrono::system_clock::now();
+    //std::chrono::time_point<std::chrono::system_clock> start, end;
+    //std::cout << "waiting for threads to finish..." << std::endl;
+    //start = std::chrono::system_clock::now();
 
     for (auto& thread : threads)
     {
         thread.join();
     }
 
-    end = std::chrono::system_clock::now();
-
-    std::chrono::duration<double> elapsed_seconds = end - start;
-    auto x = std::chrono::duration_cast<std::chrono::seconds>(elapsed_seconds);
-
-    //to_string
-    std::cout <<"Spent time (s): " << std::to_string(x.count()) << std::endl;
+    //end = std::chrono::system_clock::now();
+    //std::chrono::duration<double> elapsed_seconds = end - start;
+    //auto x = std::chrono::duration_cast<std::chrono::seconds>(elapsed_seconds);
+    //std::cout <<"Spent time (s): " << std::to_string(x.count()) << std::endl;
 
 
 	return 0;
