@@ -7,7 +7,8 @@
 
 #include "simpletaskgenerator.hpp"
 #include "simpletaskconsumer.hpp"
-#include "monitor.hpp"
+#include "producer.hpp"
+#include "consumer.hpp"
 
 int main()
 {

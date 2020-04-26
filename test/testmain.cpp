@@ -5,7 +5,6 @@
 #include <catch2/catch.hpp>
 
 #include <quadricequation.hpp>
-#include <monitor.hpp>
 #include <simpletaskgenerator.hpp>
 #include <simpletaskconsumer.hpp>
 #include <solver.hpp>
@@ -74,54 +73,54 @@ TEST_CASE("Blocked Queue with simple task")
     }
 }
 
-//TEST_CASE("Blocked Queue with QuadricEquation")
-//{
-//    const size_t capacity = 10;
-//    auto blockedQueue = std::make_unique<BlockingQueue<std::unique_ptr<QuadricEquation>>>(capacity);
-//
-//    for (size_t i = 1; i <= capacity; ++i)
-//    {
-//        auto task = std::make_unique<QuadricEquation>();
-//        task->a_ = i;
-//        task->b_ = 2 * i;
-//        task->c_ = 4 * i;
-//        blockedQueue->schedule(task);
-//    }
-//
-//    for (size_t i = 1; i <= capacity; ++i)
-//    {
-//        std::unique_ptr<QuadricEquation> task;
-//        blockedQueue->consume(task);
-//        REQUIRE(task);
-//        REQUIRE(task->a_ == i);
-//        REQUIRE(task->b_ == 2 * i);
-//        REQUIRE(task->c_ == 4 * i);
-//    }
-//}
-//
-//TEST_CASE("Blocked Queue with QuadricEquation 2")
-//{
-//    const size_t capacity = 10;
-//    auto blockedQueue = std::make_unique<BlockingQueue<QuadricEquation>>(capacity);
-//
-//    for (size_t i = 1; i <= capacity; ++i)
-//    {
-//        auto task = QuadricEquation{};
-//        task.a_ = i;
-//        task.b_ = 2 * i;
-//        task.c_ = 4 * i;
-//        blockedQueue->schedule(task);
-//    }
-//
-//    for (size_t i = 1; i <= capacity; ++i)
-//    {
-//        auto task = QuadricEquation{};
-//        blockedQueue->consume(task);
-//        REQUIRE(task.a_ == i);
-//        REQUIRE(task.b_ == 2 * i);
-//        REQUIRE(task.c_ == 4 * i);
-//    }
-//}
+TEST_CASE("Blocked Queue with QuadricEquation")
+{
+    const size_t capacity = 10;
+    auto blockedQueue = std::make_unique<BlockingQueue<std::unique_ptr<QuadricEquation>>>(capacity);
+
+    for (size_t i = 1; i <= capacity; ++i)
+    {
+        auto task = std::make_unique<QuadricEquation>();
+        task->a_ = i;
+        task->b_ = 2 * i;
+        task->c_ = 4 * i;
+        blockedQueue->schedule(task);
+    }
+
+    for (size_t i = 1; i <= capacity; ++i)
+    {
+        std::unique_ptr<QuadricEquation> task;
+        blockedQueue->consume(task);
+        REQUIRE(task);
+        REQUIRE(task->a_ == i);
+        REQUIRE(task->b_ == 2 * i);
+        REQUIRE(task->c_ == 4 * i);
+    }
+}
+
+TEST_CASE("Blocked Queue with QuadricEquation 2")
+{
+    const size_t capacity = 10;
+    auto blockedQueue = std::make_unique<BlockingQueue<QuadricEquation>>(capacity);
+
+    for (size_t i = 1; i <= capacity; ++i)
+    {
+        auto task = QuadricEquation{};
+        task.a_ = i;
+        task.b_ = 2 * i;
+        task.c_ = 4 * i;
+        blockedQueue->schedule(task);
+    }
+
+    for (size_t i = 1; i <= capacity; ++i)
+    {
+        auto task = QuadricEquation{};
+        blockedQueue->consume(task);
+        REQUIRE(task.a_ == i);
+        REQUIRE(task.b_ == 2 * i);
+        REQUIRE(task.c_ == 4 * i);
+    }
+}
 
 TEST_CASE("SimpleTaskWorkers")
 {

@@ -1,6 +1,5 @@
 
-#ifndef QUADRIC_EQUATION_HPP
-#define QUADRIC_EQUATION_HPP
+#pragma once
 
 #include <iostream>
 
@@ -49,5 +48,3 @@ public:
     }
 };
 
-
-#endif // QUADRIC_EQUATION_HPP
