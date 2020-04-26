@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <memory>
+#include <sstream>
+
 #include "solver.hpp"
 #include "quadricequation.hpp"
 
@@ -31,15 +33,19 @@ void Consumer::run()
         auto solver = Solver{};
         auto roots = solver.solve(task);
 
+        auto stream = std::stringstream{};
+        stream << "(" << task->a_ << " " << task->b_ << " " << task->c_ << ") => ";
+
         if (roots)
         {
-            std::cout << "(" << task->a_ << " " << task->b_ << " " << task->c_ << ") => " 
-                << "(" << roots->x1_ << ", " << roots->x2_ << ")" << std::endl;
+            stream << "(" << roots->x1_ << ", " << roots->x2_ << ")" << std::endl;
         }
         else
         {
-            std::cout << "(" << task->a_ << " " << task->b_ << " " << task->c_ << ") => no roots" << std::endl;
+            stream << "no roots" << std::endl;
         }
+
+        std::cout << stream.str();
 
     }
     //std::cout << "End consuming ... " << std::endl;
