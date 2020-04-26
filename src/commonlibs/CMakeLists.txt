@@ -1,27 +1,27 @@
 # CMakeList.txt : CMake project for square_solver, include source and define
 # project specific logic here.
 #
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.10)
 
 project(commonlibs C CXX)
 
 set(SOURCE_FILES
-    solver.hpp
-    solver.cpp
-    monitor.hpp
-    simpletaskworker.hpp
-    simpletaskgenerator.hpp
-    simpletaskgenerator.cpp
-    simpletaskconsumer.hpp
-    simpletaskconsumer.cpp
     quadricequation.hpp
     quadricequation.cpp
     blockingqueue.cpp
     blockingqueue.hpp
     workerbase.cpp
-    workerbase.hpp)
+    workerbase.hpp
+    solver.hpp
+    solver.cpp
+    simpletaskworker.hpp
+    simpletaskgenerator.hpp
+    simpletaskgenerator.cpp
+    simpletaskconsumer.hpp
+    simpletaskconsumer.cpp
+    monitor.hpp)
 
 add_library(commonlibs SHARED STATIC ${SOURCE_FILES})
 
-install(TARGETS commonlibs DESTINATION ${SOLVER_INSTALL_LIB_DIR})
+install(TARGETS commonlibs DESTINATION ${SOLVER_INSTALL_LIB_DIR} )
 install(FILES monitor.hpp solver.hpp DESTINATION ${SOLVER_INSTALL_INCLUDE_DIR})

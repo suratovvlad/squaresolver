@@ -2,6 +2,7 @@
 #include <iostream>
 #include <random>
 #include <thread>
+#include <string>
 
 void SimpleTaskConsumer::run() {
     std::cout << "Start consuming ... " << std::endl;

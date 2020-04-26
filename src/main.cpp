@@ -1,12 +1,12 @@
 
 #include <iostream>
 #include <limits>
-#include "simpletaskgenerator.hpp"
-#include "simpletaskconsumer.hpp"
 #include <thread>
 #include <chrono>
 #include <sstream>
 
+#include "simpletaskgenerator.hpp"
+#include "simpletaskconsumer.hpp"
 #include "monitor.hpp"
 
 int main()

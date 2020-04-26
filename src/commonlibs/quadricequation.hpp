@@ -1,8 +1,11 @@
 
-#pragma once
+#ifndef QUADRIC_EQUATION_HPP
+#define QUADRIC_EQUATION_HPP
+
 #include <iostream>
 
-struct QuadricEquation {
+class QuadricEquation {
+public:
     int a_ = 0;
     int b_ = 0;
     int c_ = 0;
@@ -47,3 +50,4 @@ struct QuadricEquation {
 };
 
 
+#endif // QUADRIC_EQUATION_HPP

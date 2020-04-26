@@ -1,5 +1,6 @@
 
-#pragma once
+#ifndef MONITOR_HPP
+#define MONITOR_HPP
 
 #include <mutex>
 #include <condition_variable>
@@ -9,9 +10,9 @@
 #include <random>
 #include <chrono>
 
-#include "quadricequation.hpp"
 #include "blockingqueue.hpp"
 #include "workerbase.hpp"
+#include "quadricequation.hpp"
 
 //class BoundedBuffer
 //{
@@ -175,3 +176,5 @@ public:
         std::cout << "End consuming ... " << std::endl;
     }
 };
+
+#endif // MONITOR_HPP

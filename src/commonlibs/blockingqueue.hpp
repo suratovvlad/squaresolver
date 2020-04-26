@@ -4,7 +4,7 @@
 #include <mutex>
 #include <condition_variable>
 
-template<class Task>
+template<typename Task>
 class BlockingQueue {
     std::queue<Task> queue_;
     std::mutex queueLock_;

@@ -1,6 +1,6 @@
 #pragma once
 
-template<class TasksQueuePtr>
+template<typename TasksQueuePtr>
 class WorkerBase {
 
 protected:
