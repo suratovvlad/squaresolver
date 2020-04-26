@@ -14,11 +14,6 @@ set(SOURCE_FILES
     workerbase.hpp
     solver.hpp
     solver.cpp
-    simpletaskworker.hpp
-    simpletaskgenerator.hpp
-    simpletaskgenerator.cpp
-    simpletaskconsumer.hpp
-    simpletaskconsumer.cpp
     producercin.hpp
     producercin.cpp
     consumer.hpp 
@@ -29,4 +24,4 @@ set(SOURCE_FILES
 add_library(commonlibs STATIC ${SOURCE_FILES})
 
 install(TARGETS commonlibs DESTINATION ${SOLVER_INSTALL_LIB_DIR} )
-install(FILES monitor.hpp solver.hpp DESTINATION ${SOLVER_INSTALL_INCLUDE_DIR})
+#install(FILES monitor.hpp solver.hpp DESTINATION ${SOLVER_INSTALL_INCLUDE_DIR})

@@ -11,8 +11,13 @@ include_directories(${COMMONLIBS_HEADERS_DIR})
 
 
 set(SOURCE_FILES
-        testmain.cpp
-        )
+    simpletaskworker.hpp
+    simpletaskgenerator.hpp
+    simpletaskgenerator.cpp
+    simpletaskconsumer.hpp
+    simpletaskconsumer.cpp
+    testmain.cpp
+    )
 
 add_executable(solver_tests ${SOURCE_FILES})
 target_link_libraries(solver_tests commonlibs Catch2::Catch2)

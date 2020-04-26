@@ -1,7 +1,7 @@
 #pragma once
 
-#include "blockingqueue.hpp"
-#include "workerbase.hpp"
+#include <blockingqueue.hpp>
+#include <workerbase.hpp>
 
 class SimpleTaskWorker : public WorkerBase<std::shared_ptr<BlockingQueue<int>>> {
 protected:
