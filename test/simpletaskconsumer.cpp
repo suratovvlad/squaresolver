@@ -12,7 +12,7 @@ void SimpleTaskConsumer::run() {
         tasksQueue_->consume(task);
 
         if (task == POISON_PILL) {
-            std::cout << "POISON_PILL found" << POISON_PILL << std::endl;
+            std::cout << "POISON_PILL found: " << POISON_PILL << std::endl;
             // return poison pill back to queue,
             // because in general case number of consumers could not be known
             tasksQueue_->schedule(POISON_PILL);
