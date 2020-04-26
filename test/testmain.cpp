@@ -11,41 +11,45 @@
 
 TEST_CASE("simple equation, D > 0")
 {
-    auto equation = QuadricEquation{};
-    equation.a_ = 1;
-    equation.b_ = -8;
-    equation.c_ = 12;
+    auto equation = std::make_shared<QuadricEquation>();
+    equation->a_ = 1;
+    equation->b_ = -8;
+    equation->c_ = 12;
 
-    auto roots = solver(equation);
+    auto solver = Solver{};
+    auto roots = solver.solve(equation);
 
-    REQUIRE(roots.x1_ == 2);
-    REQUIRE(roots.x2_ == 6);
+    REQUIRE(roots);
+    REQUIRE(roots->x1_ == 2);
+    REQUIRE(roots->x2_ == 6);
 }
 
 TEST_CASE("simple equation, D == 0")
 {
-    auto equation = QuadricEquation{};
-    equation.a_ = 1;
-    equation.b_ = 12;
-    equation.c_ = 36;
+    auto equation = std::make_shared<QuadricEquation>();
+    equation->a_ = 1;
+    equation->b_ = 12;
+    equation->c_ = 36;
 
-    auto roots = solver(equation);
+    auto solver = Solver{};
+    auto roots = solver.solve(equation);
 
-    REQUIRE(roots.x1_ == -6);
-    REQUIRE(roots.x2_ == -6);
+    REQUIRE(roots);
+    REQUIRE(roots->x1_ == -6);
+    REQUIRE(roots->x2_ == -6);
 }
 
 TEST_CASE("simple equation, D < 0")
 {
-    //auto equation = QuadricEquation{};
-    //equation.a_ = 1;
-    //equation.b_ = 12;
-    //equation.c_ = 36;
+    auto equation = std::make_shared<QuadricEquation>();
+    equation->a_ = 1;
+    equation->b_ = 2;
+    equation->c_ = 17;
 
-    //auto roots = solver(equation);
+    auto solver = Solver{};
+    auto roots = solver.solve(equation);
 
-    //REQUIRE(roots.x1_ == -6);
-    //REQUIRE(roots.x2_ == -6);
+    REQUIRE(!roots);
 }
 
 
@@ -124,45 +128,45 @@ TEST_CASE("Blocked Queue with QuadricEquation 2")
 
 TEST_CASE("SimpleTaskWorkers")
 {
-    constexpr size_t capacity = 10;
-    auto tasksQueue = std::make_shared<BlockingQueue<int>>(capacity);
+    //constexpr size_t capacity = 10;
+    //auto tasksQueue = std::make_shared<BlockingQueue<int>>(capacity);
 
 
-    std::cout << "starting producer thread..." << std::endl;
-    std::thread producerThread(&SimpleTaskGenerator::run, SimpleTaskGenerator{tasksQueue});
+    //std::cout << "starting producer thread..." << std::endl;
+    //std::thread producerThread(&SimpleTaskGenerator::run, SimpleTaskGenerator{tasksQueue});
 
-    std::cout << "starting consumer thread..." << std::endl;
-    std::thread consumerThread(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
+    //std::cout << "starting consumer thread..." << std::endl;
+    //std::thread consumerThread(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
 
-    std::cout << "starting consumer thread 2..." << std::endl;
-    std::thread consumerThread2(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
+    //std::cout << "starting consumer thread 2..." << std::endl;
+    //std::thread consumerThread2(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
 
-    std::cout << "starting consumer thread 3..." << std::endl;
-    std::thread consumerThread3(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
+    //std::cout << "starting consumer thread 3..." << std::endl;
+    //std::thread consumerThread3(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
 
-    std::cout << "starting consumer thread 3..." << std::endl;
-    std::thread consumerThread4(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
+    //std::cout << "starting consumer thread 3..." << std::endl;
+    //std::thread consumerThread4(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
 
-    std::chrono::time_point<std::chrono::system_clock> start, end;
+    //std::chrono::time_point<std::chrono::system_clock> start, end;
 
 
-    std::cout << "waiting for threads to finish..." << std::endl;
+    //std::cout << "waiting for threads to finish..." << std::endl;
 
-    start = std::chrono::system_clock::now();
+    //start = std::chrono::system_clock::now();
 
-    producerThread.join();
-    consumerThread.join();
-    consumerThread2.join();
-    consumerThread3.join();
-    consumerThread4.join();
+    //producerThread.join();
+    //consumerThread.join();
+    //consumerThread2.join();
+    //consumerThread3.join();
+    //consumerThread4.join();
 
-    end = std::chrono::system_clock::now();
+    //end = std::chrono::system_clock::now();
 
-    std::chrono::duration<double> elapsed_seconds = end - start;
-    auto x = std::chrono::duration_cast<std::chrono::seconds>(elapsed_seconds);
+    //std::chrono::duration<double> elapsed_seconds = end - start;
+    //auto x = std::chrono::duration_cast<std::chrono::seconds>(elapsed_seconds);
 
-    //to_string
-    std::cout <<"Spent time (s): " << std::to_string(x.count()) << std::endl;
+    ////to_string
+    //std::cout <<"Spent time (s): " << std::to_string(x.count()) << std::endl;
 }
 
 //using namespace std;

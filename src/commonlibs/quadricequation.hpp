@@ -5,9 +5,9 @@
 
 class QuadricEquation {
 public:
-    int a_ = 0;
-    int b_ = 0;
-    int c_ = 0;
+    std::int64_t a_ = 0;
+    std::int64_t b_ = 0;
+    std::int64_t c_ = 0;
 
     QuadricEquation() //= default;
     {
@@ -48,3 +48,8 @@ public:
     }
 };
 
+struct Roots
+{
+    double x1_ = 0;
+    double x2_ = 0;
+};

@@ -19,10 +19,12 @@ set(SOURCE_FILES
     simpletaskgenerator.cpp
     simpletaskconsumer.hpp
     simpletaskconsumer.cpp
-    producer.hpp
-    producer.cpp
+    producercin.hpp
+    producercin.cpp
     consumer.hpp 
-    consumer.cpp)
+    consumer.cpp 
+    producer.hpp 
+    producer.cpp)
 
 add_library(commonlibs STATIC ${SOURCE_FILES})
 

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <memory>
+#include "solver.hpp"
 
 void Consumer::run()
 {
@@ -26,7 +27,19 @@ void Consumer::run()
             break;
         }
 
-        std::cout << "(" << task->a_ << "," << task->b_ << "," << task->c_ << ")=>" << std::endl;
+        auto solver = Solver{};
+        auto roots = solver.solve(task);
+
+        if (roots)
+        {
+            std::cout << "(" << task->a_ << " " << task->b_ << " " << task->c_ << ") => " 
+                << "(" << roots->x1_ << ", " << roots->x2_ << ")" << std::endl;
+        }
+        else
+        {
+            std::cout << "(" << task->a_ << " " << task->b_ << " " << task->c_ << ") => no roots" << std::endl;
+        }
+
     }
     std::cout << "End consuming ... " << std::endl;
 }

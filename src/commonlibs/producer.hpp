@@ -3,11 +3,16 @@
 
 class Producer : QuadricEquationWorker {
 
+private:
+
+    std::vector<std::string> rawData_;
+
 public:
 
-    template<typename... Args>
-    explicit Producer(Args&&... args)
-        : QuadricEquationWorker{ std::forward<Args>(args)... } {}
+    explicit Producer(TasksQueuePtrType queue, std::vector<std::string>&& data)
+        : QuadricEquationWorker{ queue } 
+        , rawData_{std::move(data)}
+    {}
 
     void run() override;
 };

@@ -9,6 +9,8 @@ protected:
 //    using TasksQueue = BlockingQueue<TaskPtr>;
 //    using TasksQueuePtr = std::shared_ptr<TasksQueue>;
 
+    using TasksQueuePtrType = TasksQueuePtr;
+
     TasksQueuePtr tasksQueue_;
 
 public:

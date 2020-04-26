@@ -10,7 +10,7 @@
 #include "producer.hpp"
 #include "consumer.hpp"
 
-int main()
+int main(int argc, char* argv[])
 {
 	//std::cout << "Hello CMake Solver." << std::endl;
 
@@ -36,6 +36,7 @@ int main()
 //	}
 //	std::cout << "\nEntered : " << count << "\nSkipped  : " << skippedCount;
 
+    auto arguments = std::vector<std::string>{ argv + 1, argv + argc };
 
     constexpr size_t capacity = 10;
 
@@ -50,7 +51,7 @@ int main()
 
 
     std::cout << "starting producer thread..." << std::endl;
-    std::thread producerThread(&Producer::run, Producer{tasksQueue});
+    std::thread producerThread(&Producer::run, Producer{tasksQueue, std::move(arguments)});
 
     std::cout << "starting consumer thread..." << std::endl;
     std::thread consumerThread(&Consumer::run, Consumer{tasksQueue});
