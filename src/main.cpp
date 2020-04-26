@@ -1,41 +1,15 @@
-
+﻿
 #include <iostream>
 #include <limits>
 #include <thread>
 #include <chrono>
 #include <sstream>
 
-#include "simpletaskgenerator.hpp"
-#include "simpletaskconsumer.hpp"
 #include "producer.hpp"
 #include "consumer.hpp"
 
 int main(int argc, char* argv[])
 {
-	//std::cout << "Hello CMake Solver." << std::endl;
-
-//	int input = 0;
-//	int count = 0;
-//	int skippedCount = 0;
-//
-//	for (;;) {
-//		std::cin >> input;
-//
-//		if (std::cin.eof() || std::cin.bad()) {
-//			break;
-//		}
-//		else if (std::cin.fail()) {
-//			++skippedCount;
-//			std::cin.clear(); // unset failbit
-//			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), ' '); // skip bad input
-//		}
-//		else {
-//			++count;
-//			std::cout << input << std::endl;
-//		}
-//	}
-//	std::cout << "\nEntered : " << count << "\nSkipped  : " << skippedCount;
-
     auto arguments = std::vector<std::string>{ argv + 1, argv + argc };
 
     constexpr size_t capacity = 10;
@@ -47,36 +21,38 @@ int main(int argc, char* argv[])
 
     auto tasksQueue = std::make_shared<TasksQueue>(capacity);
 
-//    auto tasksQueue = std::make_shared<BlockingQueue<int>>(capacity);
+    const auto n = std::thread::hardware_concurrency();
+    std::cout << n << " concurrent threads are supported.\n";
 
+    auto threads = std::vector<std::thread>{};
 
-    std::cout << "starting producer thread..." << std::endl;
-    std::thread producerThread(&Producer::run, Producer{tasksQueue, std::move(arguments)});
+    // push 1 producer
+    threads.emplace_back(std::thread{ &Producer::run, Producer{ tasksQueue, std::move(arguments) } });
 
-    std::cout << "starting consumer thread..." << std::endl;
-    std::thread consumerThread(&Consumer::run, Consumer{tasksQueue});
+    // push at least 1 consumer 
+    threads.emplace_back(std::thread{ &Consumer::run, Consumer{ tasksQueue } });
 
-//    std::cout << "starting consumer thread 2..." << std::endl;
-//    std::thread consumerThread2(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
-//
-//    std::cout << "starting consumer thread 3..." << std::endl;
-//    std::thread consumerThread3(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
-//
-//    std::cout << "starting consumer thread 3..." << std::endl;
-//    std::thread consumerThread4(&SimpleTaskConsumer::run, SimpleTaskConsumer{tasksQueue});
+    // According to https://en.cppreference.com/w/cpp/thread/thread/hardware_concurrency
+    // std::thread::hardware_concurrency returns number of concurrent threads supported.
+    // If the value is not well defined or not computable, returns ​0​.
+    if (n > 2)
+    {
+        for (unsigned int i = 0; i < n - 2; ++i)
+        {
+            threads.emplace_back(std::thread{ &Consumer::run, Consumer{ tasksQueue } });
+        }
+    }
 
     std::chrono::time_point<std::chrono::system_clock> start, end;
-
 
     std::cout << "waiting for threads to finish..." << std::endl;
 
     start = std::chrono::system_clock::now();
 
-    producerThread.join();
-    consumerThread.join();
-//    consumerThread2.join();
-//    consumerThread3.join();
-//    consumerThread4.join();
+    for (auto& thread : threads)
+    {
+        thread.join();
+    }
 
     end = std::chrono::system_clock::now();
 

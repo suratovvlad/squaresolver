@@ -5,26 +5,27 @@
 #include <condition_variable>
 
 template<typename Task>
-class BlockingQueue {
+class BlockingQueue final
+{
     std::queue<Task> queue_;
     std::mutex queueLock_;
     std::condition_variable queueEmpty_;
     std::condition_variable queueFull_;
 
     using CapacityType = typename std::queue<Task>::size_type;
-    const CapacityType maxSize_ = 10;
+    const CapacityType capacity_ = 10;
 
     bool empty() const {
         return queue_.empty();
     }
 
     bool full() const {
-        return queue_.size() >= maxSize_;
+        return queue_.size() >= capacity_;
     }
 
 public:
     explicit BlockingQueue(const CapacityType& capacity)
-            : maxSize_(capacity)
+            : capacity_(capacity)
     {
 
     }

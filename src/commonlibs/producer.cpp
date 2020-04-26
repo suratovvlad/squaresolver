@@ -37,7 +37,7 @@ void Producer::run()
             case Parameter::C:
                 parameters->c_ = param;
                 currentParameter = Parameter::A;
-                tasksQueue_->schedule(std::move(parameters));
+                tasksQueue_->schedule(parameters);
                 parameters = std::make_unique<Task>();
                 break;
             }
