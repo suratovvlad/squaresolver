@@ -54,10 +54,10 @@ void Producer::run()
     // If we have only 1st or 1st and 2nd parameters, then we should assume other parameters as 0
     if (currentParameter != Parameter::A)
     {
-        tasksQueue_->schedule(parameters);
+        tasksQueue_->schedule(parameters); // (ownership is transferred)
     }
 
     // End of work, insert poison pill to queue.
     TaskPtr poisonPill = std::make_unique<PoisonPill>();
-    tasksQueue_->schedule(poisonPill);
+    tasksQueue_->schedule(poisonPill); // (ownership is transferred)
 }

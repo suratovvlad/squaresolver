@@ -28,7 +28,7 @@ void Consumer::run()
             // Return poison pill back to queue, because in general case number of consumers could not be known
             // I decided not create a new poison pill to not transferring ownership back from shared_pointer.
             TaskPtr poisonPill = std::make_unique<PoisonPill>();
-            tasksQueue_->schedule(poisonPill);
+            tasksQueue_->schedule(poisonPill); // (ownership is transferred)
 
             // Exit from infinite loop
             break;

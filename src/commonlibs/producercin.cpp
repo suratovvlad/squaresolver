@@ -41,7 +41,7 @@ void ProducerCin::run()
             }
             else {
                 std::cout << "Schedule" << std::endl;
-                tasksQueue_->schedule(parameters);
+                tasksQueue_->schedule(parameters); // (ownership is transferred)
                 count = 0;
                 parameters = std::make_unique<Task>();
             }
@@ -57,7 +57,7 @@ void ProducerCin::run()
 
     std::cout << "Insert poison pill" << std::endl;
     TaskPtr poisonPill = std::make_unique<PoisonPill>();
-    tasksQueue_->schedule(poisonPill);
+    tasksQueue_->schedule(poisonPill); // (ownership is transferred)
 
     std::cout << "End producing ... " << std::endl;
 }
