@@ -10,7 +10,6 @@ set(SOURCE_FILES
     quadricequation.cpp
     solver.hpp
     solver.cpp
-    blockingqueue.cpp
     blockingqueue.hpp
     workerbase.cpp
     workerbase.hpp
@@ -24,4 +23,4 @@ set(SOURCE_FILES
 add_library(commonlibs STATIC ${SOURCE_FILES})
 
 install(TARGETS commonlibs DESTINATION ${SOLVER_INSTALL_LIB_DIR} )
-#install(FILES monitor.hpp solver.hpp DESTINATION ${SOLVER_INSTALL_INCLUDE_DIR})
+install(FILES quadricequation.hpp solver.hpp blockingqueue.hpp workerbase.hpp consumer.hpp producer.hpp  DESTINATION ${SOLVER_INSTALL_INCLUDE_DIR})

@@ -10,18 +10,18 @@
 
 int main(int argc, char* argv[])
 {
-    // Use some aliases for convinience
+    // Use some aliases for convenience
     using Task = QuadricEquation;
     using TaskPtr = std::unique_ptr<Task>;
     using TasksQueue = BlockingQueue<TaskPtr>;
     using TasksQueuePtr = std::shared_ptr<TasksQueue>;
 
     // Frankly I didn't find any recommendations about optimal capacity for Blocking Queue
-    // but I think it should be tuned accoding to task requirements and execution environment.
-    // I hope, 1000 is not overkill and enough for this programm
+    // but I think it should be tuned according to task requirements and execution environment.
+    // I hope, 1000 is not overkill and enough for this program
     constexpr size_t queueCapacity = 1000;
 
-    // Use shared Blocking Queue between producer and concumers.
+    // Use shared Blocking Queue between producer and consumers.
     // According to https://en.cppreference.com/w/cpp/memory/shared_ptr
     // All member functions (including copy constructor and copy assignment) can be called by 
     // multiple threads on different instances of shared_ptr without additional synchronization 
@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
     start = std::chrono::system_clock::now();
 #endif //  0
 
-    // Join all joinable threads
+    // Join all join-able threads
     for (auto& thread : threads)
     {
         if (thread.joinable())
