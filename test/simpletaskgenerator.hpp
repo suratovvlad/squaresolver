@@ -2,6 +2,9 @@
 
 #include "simpletaskworker.hpp"
 
+/**
+ * \brief For testing propose.
+ */
 class SimpleTaskGenerator : public SimpleTaskWorker {
 
 public:

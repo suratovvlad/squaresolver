@@ -1,11 +1,19 @@
 #include "solver.hpp"
-#include "solver.hpp"
 
 #include <cmath>
 #include <iostream>
 
-std::unique_ptr<Roots> Solver::solve(std::shared_ptr<QuadricEquation> parameters)
+std::unique_ptr<Roots> Solver::solve(std::shared_ptr<QuadraticEquation> parameters) const
 {
+	// Specific case:
+	// parameter A should not be equal 0, because in that case it is not a quadratic equation.
+	// So, I decided to return no roots for that case
+
+	if (parameters->a_ == 0)
+	{
+		return nullptr;
+	}
+
 	// convert to double to avoid overflow
 	// because std::numeric_limits<std::int64_t>::max() < std::numeric_limits<double>::max();
 

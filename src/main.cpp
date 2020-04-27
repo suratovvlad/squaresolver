@@ -11,7 +11,7 @@
 int main(int argc, char* argv[])
 {
     // Use some aliases for convenience
-    using Task = QuadricEquation;
+    using Task = QuadraticEquation;
     using TaskPtr = std::unique_ptr<Task>;
     using TasksQueue = BlockingQueue<TaskPtr>;
     using TasksQueuePtr = std::shared_ptr<TasksQueue>;

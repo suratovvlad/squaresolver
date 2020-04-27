@@ -8,11 +8,11 @@
 #include "simpletaskgenerator.hpp"
 #include "simpletaskconsumer.hpp"
 #include <solver.hpp>
-#include <quadricequation.hpp>
+#include <quadraticequation.hpp>
 
 TEST_CASE("simple equation, D > 0")
 {
-    auto equation = std::make_shared<QuadricEquation>();
+    auto equation = std::make_shared<QuadraticEquation>();
     equation->a_ = 1;
     equation->b_ = -8;
     equation->c_ = 12;
@@ -27,7 +27,7 @@ TEST_CASE("simple equation, D > 0")
 
 TEST_CASE("simple equation, D == 0")
 {
-    auto equation = std::make_shared<QuadricEquation>();
+    auto equation = std::make_shared<QuadraticEquation>();
     equation->a_ = 1;
     equation->b_ = 12;
     equation->c_ = 36;
@@ -42,7 +42,7 @@ TEST_CASE("simple equation, D == 0")
 
 TEST_CASE("simple equation, D < 0")
 {
-    auto equation = std::make_shared<QuadricEquation>();
+    auto equation = std::make_shared<QuadraticEquation>();
     equation->a_ = 1;
     equation->b_ = 2;
     equation->c_ = 17;
@@ -78,14 +78,14 @@ TEST_CASE("Blocked Queue with simple task")
     }
 }
 
-TEST_CASE("Blocked Queue with QuadricEquation")
+TEST_CASE("Blocked Queue with QuadraticEquation")
 {
     const size_t capacity = 10;
-    auto blockedQueue = std::make_unique<BlockingQueue<std::unique_ptr<QuadricEquation>>>(capacity);
+    auto blockedQueue = std::make_unique<BlockingQueue<std::unique_ptr<QuadraticEquation>>>(capacity);
 
     for (size_t i = 1; i <= capacity; ++i)
     {
-        auto task = std::make_unique<QuadricEquation>();
+        auto task = std::make_unique<QuadraticEquation>();
         task->a_ = i;
         task->b_ = 2 * i;
         task->c_ = 4 * i;
@@ -94,7 +94,7 @@ TEST_CASE("Blocked Queue with QuadricEquation")
 
     for (size_t i = 1; i <= capacity; ++i)
     {
-        std::unique_ptr<QuadricEquation> task;
+        std::unique_ptr<QuadraticEquation> task;
         blockedQueue->consume(task);
         REQUIRE(task);
         REQUIRE(task->a_ == i);
@@ -103,14 +103,14 @@ TEST_CASE("Blocked Queue with QuadricEquation")
     }
 }
 
-TEST_CASE("Blocked Queue with QuadricEquation 2")
+TEST_CASE("Blocked Queue with QuadraticEquation 2")
 {
     const size_t capacity = 10;
-    auto blockedQueue = std::make_unique<BlockingQueue<QuadricEquation>>(capacity);
+    auto blockedQueue = std::make_unique<BlockingQueue<QuadraticEquation>>(capacity);
 
     for (size_t i = 1; i <= capacity; ++i)
     {
-        auto task = QuadricEquation{};
+        auto task = QuadraticEquation{};
         task.a_ = i;
         task.b_ = 2 * i;
         task.c_ = 4 * i;
@@ -119,7 +119,7 @@ TEST_CASE("Blocked Queue with QuadricEquation 2")
 
     for (size_t i = 1; i <= capacity; ++i)
     {
-        auto task = QuadricEquation{};
+        auto task = QuadraticEquation{};
         blockedQueue->consume(task);
         REQUIRE(task.a_ == i);
         REQUIRE(task.b_ == 2 * i);
