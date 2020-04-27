@@ -10,10 +10,6 @@ template<typename TasksQueuePtr>
 class WorkerBase {
 
 protected:
-//    using Task = QuadraticEquation;
-//    using TaskPtr = std::unique_ptr<Task>;
-//    using TasksQueue = BlockingQueue<TaskPtr>;
-//    using TasksQueuePtr = std::shared_ptr<TasksQueue>;
 
     // Alias for convenience 
     using TasksQueuePtrType = TasksQueuePtr;
