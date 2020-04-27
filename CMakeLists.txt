@@ -24,4 +24,5 @@ include_directories(${COMMONLIBS_HEADERS_DIR})
 
 # Include sub-projects.
 add_subdirectory ("src")
-add_subdirectory ("test")
+# Disable tests
+#add_subdirectory ("test")
