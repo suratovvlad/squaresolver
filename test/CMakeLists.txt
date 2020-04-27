@@ -6,6 +6,7 @@ cmake_minimum_required(VERSION 3.10)
 project(solver_tests)
 
 find_package(Catch2 CONFIG REQUIRED)
+find_package(Threads REQUIRED)
 
 include_directories(${COMMONLIBS_HEADERS_DIR})
 
@@ -21,6 +22,7 @@ set(SOURCE_FILES
 
 add_executable(solver_tests ${SOURCE_FILES})
 target_link_libraries(solver_tests commonlibs Catch2::Catch2)
+target_link_libraries(solver_tests Threads::Threads)
 install(TARGETS solver_tests DESTINATION bin)
 
 include(CTest)
